@@ -26,8 +26,8 @@ tests = ['testset-levela.tsv.csv',
          ]
 
 
-# 处理测试集数据, 
-# 字段：id,tweet
+# Process Testset, 
+# field：id,tweet
 # 
 def process_test_dat (filename):
     df = pd.read_csv(filename)
@@ -38,7 +38,7 @@ def process_test_dat (filename):
     df.to_csv(nfilename, header=None, sep='\t', index=False)
     print('save to file: %s' % nfilename)
 
-# 处理所有测试数据
+# Process all test data
 def ProcessAllTest ():
     for fn in tests:
         test_file = os.path.join(dat_path, fn)
@@ -46,10 +46,10 @@ def ProcessAllTest ():
         process_test_dat(test_file)
 
 
-# 拆分数据集 train:test:val = 8:1:1
+# Split dataset train:test:val = 8:1:1
 def splitdataset (df, file_pre='dat' ):
     print('processing... file: ', file_pre)
-    df = df.sample(frac=1.0)  # 全部打乱
+    df = df.sample(frac=1.0)  # random
 
     cut_idx = int(round(0.2 * df.shape[0]))
     df_test, df_train = df.iloc[:cut_idx], df.iloc[cut_idx:]
@@ -67,14 +67,14 @@ def splitdataset (df, file_pre='dat' ):
         (df_train.shape[0], df_test.shape[0], df_val.shape[0]))
     print('-'*40)
 
-##指定列按特征索引值进行映射到新列newColumn
+##Specifies that the column is mapped to the new column by the characteristic index value，newColumn
 def MapNewColumn(df, oldcol, newcol, isdrop=1 , workpath = './'):
     A = df[oldcol].value_counts().argsort()
-    print('[%s]列值分布情况:' % oldcol)
+    print('[%s]Column value distribution:' % oldcol)
     dict_oldcol = {'index':A.index,'values':A.values}
     df_oldcol = pd.DataFrame(dict_oldcol)
     df_oldcol.to_csv( os.path.join(workpath, 'MapNewColumn_%s.csv' % oldcol) )
-    print('[%s]列值分布情况已保存' % oldcol)
+    print('[%s]Column value distribution saved' % oldcol)
     # -----
     df[newcol] = df[oldcol].map(A)
     if isdrop:
@@ -82,11 +82,11 @@ def MapNewColumn(df, oldcol, newcol, isdrop=1 , workpath = './'):
     return df
 
 
-# 处理训练数据
+# Processing training data
 def ProcessAllTrain():
     
-    # 字段名： id,subtask_a,sbutask_b,subtask_c,tweet
-    # 读取CSV文件
+    # The field name： id,subtask_a,sbutask_b,subtask_c,tweet
+    # Read CSV file
     nfilename = os.path.splitext(train_file)[0]
     
     print('process training file'.center(40,'-'))
